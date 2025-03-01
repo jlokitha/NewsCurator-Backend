@@ -26,6 +26,7 @@ export const login = async (req: Request, res:Response) => {
         const tokens = await userService.login(email, password);
         res.status(200).json(tokens);
     } catch (error) {
+        console.log(error);
         res.status(400).json('Login failed');
     }
 };
@@ -34,6 +35,7 @@ export const refreshToken = async (req: Request, res:Response) => {
     const authHeader = req.headers.authorization;
     try {
         const token = await userService.refreshToken(authHeader);
+        console.log('refreshed token', token)
         res.status(200).json(token);
     } catch (err) {
         res.status(400).send("error refreshing token");
