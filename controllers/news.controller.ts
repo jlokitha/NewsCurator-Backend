@@ -8,7 +8,6 @@ export const saveBookmark = async (req: Request, res: Response) => {
     const userId =req.params.userId;
     const news = req.body;
     try {
-        console.log('userId', userId);
         const saved = await newsService.saveBookmark(Number(userId), news);
         res.status(200).json(saved);
     } catch (error) {
@@ -21,7 +20,6 @@ export const deleteBookmark = async (req: Request, res: Response) => {
     const userId = req.params.userId;
     const articleId = req.params.articleId;
     try {
-        console.log('delete', userId, articleId);
         const deleted = await newsService.deleteBookmark(Number(userId), Number(articleId));
         res.status(200).json(deleted);
     } catch (error) {
@@ -35,7 +33,6 @@ export const findNews = async (req: Request, res: Response) => {
         const userId = Number(req.params.userId);
         const page = parseInt(req.params.page);
         const news = await newsService.getNews(page, userId);
-        console.log(news.length);
         res.status(200).json(news);
     } catch (error) {
         console.log(error);
@@ -48,7 +45,6 @@ export const findNewsByKeyword = async (req: Request, res: Response) => {
     const page = parseInt(req.params.page);
     const userId = Number(req.params.userId);
     try {
-        console.log('keyword', keyword);
         const news = await newsService.getNewsByKeyword(keyword, page, userId);
         res.status(200).json(news);
     } catch (error) {
@@ -60,7 +56,6 @@ export const findNewsByKeyword = async (req: Request, res: Response) => {
 export const findBookmarks = async (req: Request, res: Response) => {
     const userId = Number(req.params.userId);
     try {
-        console.log('bookmarks', userId);
         const bookmarks = await newsService.getBookmarks(userId);
         res.status(200).json(bookmarks);
     } catch (error) {

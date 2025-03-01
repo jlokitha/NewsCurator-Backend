@@ -16,7 +16,7 @@ app.use(cors({
 }));
 
 app.use('/api/v1/auth', userRoutes);
-// app.use(authenticateToken);
+app.use(authenticateToken);
 app.use('/api/v1/news', newsRoutes);
 
 app.listen(5000, (err) => {
