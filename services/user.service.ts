@@ -35,6 +35,8 @@ export class UserService {
 
         if (!refresh_token) throw new Error("No token provided");
 
+        console.log('auth header', authHeader)
+        console.log('refresh', refresh_token)
         const payload = jwt.verify(refresh_token as string, REFRESH_TOKEN as Secret) as {username: string, iat: number};
         const token = jwt.sign({username: payload.username}, SECRET_KEY as Secret, {expiresIn: "1m"});
         return {accessToken: token};
