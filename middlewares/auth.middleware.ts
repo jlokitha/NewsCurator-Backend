@@ -11,10 +11,10 @@ function authenticateToken(req : express.Request, res : express.Response, next :
     }
 
     console.log('url', req.url)
-    console.log('token', token)
     try{
         const payload = jwt.verify(token as string, process.env.SECRET_KEY as Secret) as {username: string, iat: number};
         req.body.username = payload.username;
+        console.log('verified token', payload);
         next();
     }catch(err){
         console.log('Invalid token', err);

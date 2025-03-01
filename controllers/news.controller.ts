@@ -1,5 +1,6 @@
 import {NewsService} from "../services/news.service";
 import { Request, Response } from 'express';
+import exp from "node:constants";
 
 const newsService = new NewsService();
 
@@ -13,6 +14,19 @@ export const saveBookmark = async (req: Request, res: Response) => {
     } catch (error) {
         console.log(error);
         res.status(400).json('Error saving bookmark');
+    }
+}
+
+export const deleteBookmark = async (req: Request, res: Response) => {
+    const userId = req.params.userId;
+    const articleId = req.params.articleId;
+    try {
+        console.log('delete', userId, articleId);
+        const deleted = await newsService.deleteBookmark(Number(userId), Number(articleId));
+        res.status(200).json(deleted);
+    } catch (error) {
+        console.log(error);
+        res.status(400).json('Error deleting bookmark');
     }
 }
 
@@ -34,11 +48,23 @@ export const findNewsByKeyword = async (req: Request, res: Response) => {
     const page = parseInt(req.params.page);
     const userId = Number(req.params.userId);
     try {
+        console.log('keyword', keyword);
         const news = await newsService.getNewsByKeyword(keyword, page, userId);
-        console.log('keyword', news.length);
         res.status(200).json(news);
     } catch (error) {
         console.log(error);
         res.status(400).json('Error fetching news');
+    }
+}
+
+export const findBookmarks = async (req: Request, res: Response) => {
+    const userId = Number(req.params.userId);
+    try {
+        console.log('bookmarks', userId);
+        const bookmarks = await newsService.getBookmarks(userId);
+        res.status(200).json(bookmarks);
+    } catch (error) {
+        console.log(error);
+        res.status(400).json('Error fetching bookmarks');
     }
 }

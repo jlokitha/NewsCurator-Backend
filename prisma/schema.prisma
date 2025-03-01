@@ -27,11 +27,11 @@ model Article {
   source      String
   author      String
   title       String
-  description String
+  description String     @db.VarChar(500)
   url         String     @unique
   urlToImage  String
   publishedAt DateTime
-  content     String     @db.VarChar(300)
+  content     String     @db.VarChar(500)
   bookmarks   Bookmark[]
   createdAt   DateTime   @default(now())
 }

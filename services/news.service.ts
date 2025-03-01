@@ -20,7 +20,6 @@ export class NewsService {
         const newsResponse = await axios.get(newsApiUrl);
         const newsArticles = newsResponse.data.articles;
 
-        // console.log('userId', userId);
         const bookmarks = await this.newsRepository.getBookmarks(userId);
         const bookmarkedArticles = bookmarks.map(bookmark => bookmark.article);
 
@@ -39,7 +38,7 @@ export class NewsService {
         if (!this.NEWS_API_KEY) {
             throw new Error('NEWS_API_KEY is not set in the environment variables');
         }
-
+        console.log('user--Id', userId);
         const sources = 'bbc-news,the-new-york-times,al-jazeera-english,associated-press,the-guardian-uk';
         const encodedKeyword = encodeURIComponent(keyword);
         const newsApiUrl = `https://newsapi.org/v2/everything?sources=${sources}&q=${encodedKeyword}&page=${page}&pageSize=20&language=en&apiKey=${this.NEWS_API_KEY}`;
@@ -64,7 +63,14 @@ export class NewsService {
         return await this.newsRepository.createNews(news, userId);
     }
 
+    async deleteBookmark(userId: number, articleId: number) {
+        return await this.newsRepository.deleteBookmark(userId, articleId);
+    }
+
     async getBookmarks(userId: number) {
-        return this.newsRepository.getBookmarks(userId);
+        const bookmarks = await this.newsRepository.getBookmarks(userId);
+        return bookmarks.map(bookmark => {
+            return {...bookmark.article, isBookmarked: true};
+        });
     }
 }

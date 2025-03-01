@@ -42,7 +42,36 @@ export class NewsRepository {
         return {...article, isBookmarked: true};
     }
 
+    async deleteBookmark(userId: number, articleId: number) {
+        console.log('deleting', userId, articleId);
+        const deletedResult = await prisma.bookmark.deleteMany({
+            where: {
+                userId: userId,
+                articleId: articleId,
+            },
+        });
+
+        const remainingBookmarks = await prisma.bookmark.count({
+            where: {
+                articleId: articleId,
+            },
+        });
+
+        let articleDeleted = false;
+        if (remainingBookmarks === 0) {
+            await prisma.article.delete({
+                where: {
+                    id: articleId,
+                },
+            });
+            articleDeleted = true;
+        }
+
+        return { deletedBookmarks: deletedResult.count, articleDeleted };
+    }
+
     async getBookmarks(userId: number) {
+        console.log('userid', userId);
         return prisma.bookmark.findMany({
             where: {
                 userId: userId,
@@ -50,7 +79,9 @@ export class NewsRepository {
             include: {
                 article: true,
             },
+            orderBy: {
+                createdAt: 'desc',
+            },
         });
     }
-
 }
